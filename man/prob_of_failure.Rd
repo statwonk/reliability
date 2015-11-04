@@ -2,7 +2,7 @@
 % Please edit documentation in R/components.R
 \name{prob_of_failure}
 \alias{prob_of_failure}
-\title{Title}
+\title{Probability of failure}
 \usage{
 prob_of_failure(data)
 }
@@ -13,6 +13,6 @@ prob_of_failure(data)
 numeric
 }
 \description{
-Title
+Probability of failure
 }
 

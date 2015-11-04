@@ -20,15 +20,17 @@ copy <- function(series) {
 #' @return list
 #' @export
 #'
-node <- function(item = NULL, name, reliability) {
+nodes <- function(item = NULL, name, reliability, n = 1) {
   if(is.null(item)) {
     item <- list()
   } else {
     item <- copy(item)
   }
 
-  item[[name]] <- reliability
-  item
+  for(i in 1:n) {
+    item[[paste(name, i, sep = "_")]] <- reliability
+  }
+  return(item)
 }
 
 #' Probability of failure

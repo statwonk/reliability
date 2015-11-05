@@ -50,6 +50,16 @@ nodes(name = "web server", reliability = 0.90) %>%
   prob_of_failure()
 ```
 
+Similar to Legos, `reliability` lets you build complex systems out of simple components (`nodes`). For example, we can add an arbitrary number of components to a series like,
+
+```{r}
+nodes(name = "load balancerr", reliability = 0.999) %>%
+  nodes(name = "web server",  0.99) %>%
+  nodes(name = "caching layer",  0.95) %>%
+  nodes(name = "database",  0.9999) %>%
+  prob_of_failure() %>% scales::percent()
+```
+
 
 
 ### References

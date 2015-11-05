@@ -35,15 +35,19 @@ nodes <- function(item = NULL, name, reliability, n = 1) {
 
 #' Probability of failure
 #'
-#' @param data
+#' @param reliabilities
 #'
 #' @return numeric
 #' @export
 #'
-prob_of_failure <- function(data) {
-  if(length(data) > 1) {
-    return(1 - do.call(prod, data))
+prob_of_failure <- function(reliabilities) {
+  # recall reliability aka "survival" is 1 - P(failure),
+  # hence F1 + F2 - F1 * F2 <=>
+  # 1 - (1 - F1)(1 - F2) <=>
+  # 1 - S1 * S2 where S indicates a survival function.
+  if(length(reliabilities) > 1) {
+    return(1 - do.call(prod, reliabilities))
   } else {
-    return(1 - unlist(data))
+    return(1 - unlist(reliabilities))
   }
 }

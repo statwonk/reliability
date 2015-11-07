@@ -28,35 +28,37 @@ library(magrittr)
 library(reliability)
 
 # just one node
-nodes(name = "web server", reliability = 0.90)
+node(name = "web server", reliability = 0.90)
 
 # now showing probability of failure
-nodes(name = "database",  reliability = 0.90) %>%
+node(name = "database",  reliability = 0.90) %>%
   prob_of_failure()
 ```
 
 Our two-component system,
 
 ```{r}
-nodes(name = "web server", reliability = 0.90) %>%
-  nodes(name = "database",  0.90)
+node(name = "web server", reliability = 0.90) %>%
+  node(name = "database",  0.90)
 ```
 
 Putting it together,
 
 ```{r}
-nodes(name = "web server", reliability = 0.90) %>%
-  nodes(name = "database",  0.90) %>%
+node(name = "web server", reliability = 0.90) %>%
+  node(name = "database",  0.90) %>%
   prob_of_failure()
 ```
 
-Similar to Legos, `reliability` lets you build complex systems out of simple components (`nodes`). For example, we can add an arbitrary number of components to a series like,
+### Customize for your cluster
+
+Similar to Legos, `reliability` lets you build complex systems out of simple components (`node`). For example, we can add an arbitrary number of components to a series like,
 
 ```{r}
-nodes(name = "load balancerr", reliability = 0.999) %>%
-  nodes(name = "web server",  0.99) %>%
-  nodes(name = "caching layer",  0.95) %>%
-  nodes(name = "database",  0.9999) %>%
+node(name = "load balancer", reliability = 0.999) %>%
+  node(name = "web server",  0.99) %>%
+  node(name = "caching layer",  0.95) %>%
+  node(name = "database",  0.9999) %>%
   prob_of_failure() %>% scales::percent()
 ```
 

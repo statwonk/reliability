@@ -2,17 +2,23 @@
 % Please edit documentation in R/components.R
 \name{parallel}
 \alias{parallel}
-\title{Title}
+\title{Parallel}
 \usage{
 parallel(system = NULL, name, components, n)
 }
 \arguments{
-\item{...}{}
+\item{system}{}
+
+\item{name}{}
+
+\item{components}{}
+
+\item{n}{}
 }
 \value{
 list
 }
 \description{
-Title
+Parallel
 }
 

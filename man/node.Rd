@@ -2,7 +2,7 @@
 % Please edit documentation in R/components.R
 \name{node}
 \alias{node}
-\title{Node}
+\title{A single node}
 \usage{
 node(...)
 }
@@ -10,6 +10,6 @@ node(...)
 \item{...}{}
 }
 \description{
-Node
+see ?nodes
 }
 

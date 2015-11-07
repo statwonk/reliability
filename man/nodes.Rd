@@ -2,14 +2,14 @@
 % Please edit documentation in R/components.R
 \name{nodes}
 \alias{nodes}
-\title{Node}
+\title{A series of nodes}
 \usage{
-nodes(item = NULL, name, reliability, n)
+nodes(system = NULL, name, reliability, n)
 }
 \arguments{
-\item{item}{}
-
 \item{name}{}
+
+\item{item}{}
 
 \item{exp_time_to_failure}{}
 }
@@ -17,6 +17,6 @@ nodes(item = NULL, name, reliability, n)
 list
 }
 \description{
-Node
+A series of nodes
 }
 

@@ -1,25 +1,4 @@
-#' Title
-#'
-#' @param ...
-#'
-#' @return list
-#' @export
-#'
-parallel <- function(system = NULL, name, components, n) {
-  if(is.null(system)) system <- list()
-
-  failures <- lapply(rep(components, n),
-                     function(x) { 1 - unlist(x) })
-
-  system[[name]] <- ifelse(
-    length(failures) > 1,
-    { 1 - do.call(prod, failures) },
-    { 1 - unlist(failures) })
-
-  return(system)
-}
-
-#' Node
+#' A series of nodes
 #'
 #' @param item
 #' @param name
@@ -28,16 +7,17 @@ parallel <- function(system = NULL, name, components, n) {
 #' @return list
 #' @export
 #'
-nodes <- function(item = NULL, name, reliability, n) {
-  if(is.null(item)) item <- list()
+nodes <- function(system = NULL, name, reliability, n) {
+  if(is.null(system)) system <- list()
   for(i in 1:n) {
-    item[[paste(name, i, sep = "_")]] <- reliability
+    system[[paste(name, i, sep = "_")]] <- reliability
   }
-  return(item)
+  return(system)
 }
 
-#' Node
+#' A single node
 #'
+#' @description see ?nodes
 #' @param ...
 #'
 #' @export
@@ -63,4 +43,28 @@ reliability <- function(reliabilities) {
            { do.call(prod, reliabilities) },
            { unlist(reliabilities) })
   )
+}
+
+#' Parallel
+#'
+#' @param system
+#' @param name
+#' @param components
+#' @param n
+#'
+#' @return list
+#' @export
+#'
+parallel <- function(system = NULL, name, components, n) {
+  if(is.null(system)) system <- list()
+
+  failures <- lapply(rep(components, n),
+                     function(x) { 1 - unlist(x) })
+
+  system[[name]] <- ifelse(
+    length(failures) > 1,
+    { 1 - do.call(prod, failures) },
+    { 1 - unlist(failures) })
+
+  return(system)
 }

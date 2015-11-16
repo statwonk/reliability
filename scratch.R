@@ -1,19 +1,34 @@
 library(magrittr)
 library(reliability)
+library(DiagrammeR)
 
-web_servers <- create_system() %>%
-  node("leader", 0.99) %>%
-  node("network", 0.8) %>%
-  node("servers", 0.95) %>%
-  reliability()
+plot.reliability_graph <- function(x) {
+  print(
+    create_graph() %>%
+      add_node_df(create_nodes(names(x))) %>%
+      add_edge_df(create_edges(from = names(x)[-length(names(x))],
+                               to = names(x)[-1])) %>%
+      render_graph()
+  )
+}
 
 create_system() %>%
   node("load balancer", 0.9) %>%
-  node("web server cluster", web_servers) %>%
   node("database", 0.9) %>%
+  node("web server", 0.9) %T>%
+  plot() %>%
   reliability()
 
 
+
+create_graph() %>%
+  add_node_df(create_nodes(c('Internet', 'Load Balancer', 'Web Server'))) %>%
+  add_edge_df(create_edges(from = c('Internet', 'Load Balancer'),
+                           to = c('Load Balancer', 'Web Server'))) %>%
+  set_node_attr('Internet', 'shape', 'plaintext') %>%
+  set_node_attr('Load Balancer', 'reliability', 0.8) %>%
+  set_node_attr('Web Server', 'reliability', 0.9) %>%
+  render_graph()
 
 #
 # library(dplyr)

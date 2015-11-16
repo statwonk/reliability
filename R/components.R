@@ -26,7 +26,7 @@ node <- function(graph = NULL, name, reliability, n = 1) {
   if(is.null(graph)) graph <- list()
 
   reliability <- 1 - prod(rep(1 - reliability, n))
-  graph[[length(graph) + 1]] <- reliability
+  graph[[name]] <- reliability
 
   return(graph)
 }

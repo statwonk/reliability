@@ -2,16 +2,6 @@ library(magrittr)
 library(reliability)
 library(DiagrammeR)
 
-plot.reliability_graph <- function(x) {
-  print(
-    create_graph() %>%
-      add_node_df(create_nodes(names(x))) %>%
-      add_edge_df(create_edges(from = names(x)[-length(names(x))],
-                               to = names(x)[-1])) %>%
-      render_graph()
-  )
-}
-
 create_system() %>%
   node("load balancer", 0.9) %>%
   node("database", 0.9) %>%

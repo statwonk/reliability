@@ -9,18 +9,27 @@ ui = shinyUI(fluidPage(
            aceEditor('code', mode='r', value="create_system() %>%
   node('load balancer', 0.9) %>%
   node('database', 0.9) %>%
-  node('web server', 0.9) %>%
-  plot()"),
+  node('web server', 0.9)"),
            actionButton("eval", "Evaluate")
     ),
-    column(8, grVizOutput('diagram'))
+    column(8,
+           textOutput("reliability"),
+           grVizOutput("diagram"))
   )
 ))
 
 server = shinyServer(function(input, output) {
+
+  code <- reactive(input$code)
+
+  output$reliability <- renderText({
+    input$eval
+    isolate(eval(parse(text=code())) %>% reliability())
+  })
+
   output$diagram <- renderGrViz({
     input$eval
-    isolate(eval(parse(text=input$code)))
+    isolate(eval(parse(text=code())) %>% plot())
   })
 })
 

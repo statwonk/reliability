@@ -5,9 +5,10 @@
 #' @return list
 #' @export
 #'
-create_system <- function(named) {
+create_system <- function(name) {
   reliability_graph <- list()
 
+  attr(reliability_graph, "name") <- name
   attr(reliability_graph, "class") <- "reliability_graph"
 
   return(reliability_graph)

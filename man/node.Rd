@@ -2,14 +2,21 @@
 % Please edit documentation in R/components.R
 \name{node}
 \alias{node}
-\title{A single node}
+\title{A series of nodes}
 \usage{
-node(...)
+node(graph = NULL, name, reliability, n = 1)
 }
 \arguments{
-\item{...}{}
+\item{name}{}
+
+\item{item}{}
+
+\item{exp_time_to_failure}{}
+}
+\value{
+list
 }
 \description{
-see ?nodes
+A series of nodes
 }
 

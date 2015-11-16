@@ -1,3 +1,18 @@
+#' Create a system
+#'
+#' @param named
+#'
+#' @return list
+#' @export
+#'
+create_system <- function(named) {
+  reliability_graph <- list()
+
+  attr(reliability_graph, "class") <- "reliability_graph"
+
+  return(reliability_graph)
+}
+
 #' A series of nodes
 #'
 #' @param item
@@ -7,23 +22,13 @@
 #' @return list
 #' @export
 #'
-nodes <- function(system = NULL, name, reliability, n) {
-  if(is.null(system)) system <- list()
-  for(i in 1:n) {
-    system[[paste(name, i, sep = "_")]] <- reliability
-  }
-  return(system)
-}
+node <- function(graph = NULL, name, reliability, n = 1) {
+  if(is.null(graph)) graph <- list()
 
-#' A single node
-#'
-#' @description see ?nodes
-#' @param ...
-#'
-#' @export
-#'
-node <- function(...) {
-  nodes(..., n = 1)
+  reliability <- 1 - prod(rep(1 - reliability, n))
+  graph[[length(graph) + 1]] <- reliability
+
+  return(graph)
 }
 
 #' Reliability
@@ -38,33 +43,6 @@ reliability <- function(reliabilities) {
   # hence F1 + F2 - F1 * F2 <=>
   # 1 - (1 - F1)(1 - F2) <=>
   # 1 - S1 * S2 where S indicates a survival function.
-  list(
-    ifelse(length(reliabilities) > 1,
-           { do.call(prod, reliabilities) },
-           { unlist(reliabilities) })
-  )
+  prod(unlist(reliabilities))
 }
 
-#' Parallel
-#'
-#' @param system
-#' @param name
-#' @param components
-#' @param n
-#'
-#' @return list
-#' @export
-#'
-parallel <- function(system = NULL, name, components, n) {
-  if(is.null(system)) system <- list()
-
-  failures <- lapply(rep(components, n),
-                     function(x) { 1 - unlist(x) })
-
-  system[[name]] <- ifelse(
-    length(failures) > 1,
-    { 1 - do.call(prod, failures) },
-    { 1 - unlist(failures) })
-
-  return(system)
-}

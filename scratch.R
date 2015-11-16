@@ -1,20 +1,20 @@
 library(magrittr)
 library(reliability)
 
-node(name = "load balancer", reliability = 0.90)
-
-node(name = "load balancer", reliability = 0.90) %>%
-  node("web server",  0.90) %>%
+web_servers <- create_system() %>%
+  node("leader", 0.99) %>%
+  node("network", 0.8) %>%
+  node("servers", 0.95) %>%
   reliability()
 
-node(name = "load balancer", reliability = 0.90) %>%
-  parallel(
-    name = "web servers",
-    components = node(name = "web server", reliability = 0.90) %>%
-      reliability(),
-    n = 2) %>%
+create_system() %>%
+  node("load balancer", 0.9) %>%
+  node("web server cluster", web_servers) %>%
+  node("database", 0.9) %>%
   reliability()
-#
+
+
+
 #
 # library(dplyr)
 # library(ggplot2)

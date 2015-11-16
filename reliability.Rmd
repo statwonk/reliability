@@ -1,0 +1,59 @@
+---
+title: "reliability library for R"
+author: "Christopher Peters"
+date: "November 4, 2015"
+output: html_document
+---
+
+Cloud computing has empowered developers to create very complex inter-connected systems with unique network topologies. Software engineers cope by automating configuration, standarizing operating procedures, validating system changes, soft-deployments ("canaries"), easy roll-back to known software versions, and fire drills ([read more](http://queue.acm.org/detail.cfm?id=2839461)).
+
+Absent from the discussion appears to be statistical techniques for understanding and improving system reliability. This software library seeks to create a bridge between statistical and engineering techniques.
+
+## Simple two component series
+
+Consider the simplest setup, a web server and a database,
+
+`[ Web server @ 0.90 reliability ] ------> [ Database @ 0.90 reliability ]`
+
+the reliability of this system can be deconstructed into three terms,
+
+`= P(web server failure) + P(database failure) - [ P(web server failure) * P(database failure) ]`
+
+The likelihood of system failure for a two component series is the addition of each component's likelihood of failure e.g. `P(web server failure)` minus the likelihood that both components fail. The intuition is that it only takes one component failure to cause system failure, so we must subtract the unnecessary probability that both fail.
+
+Using `library(reliability)`, here's the calculation step-by-step:
+
+```{r}
+library(magrittr)
+library(reliability)
+
+# just one node
+nodes(name = "web server", reliability = 0.90)
+
+# now showing probability of failure
+nodes(name = "database",  reliability = 0.90) %>%
+  prob_of_failure()
+```
+
+Our two-component system,
+
+```{r}
+nodes(name = "web server", reliability = 0.90) %>%
+  nodes(name = "database",  0.90)
+```
+
+Putting it together,
+
+```{r}
+nodes(name = "web server", reliability = 0.90) %>%
+  nodes(name = "database",  0.90) %>%
+  prob_of_failure()
+```
+
+
+
+### References
+
+Meeker, William Q., and Luis A. Escobar. _Statistical Methods for Reliability Data_. New York: Wiley, 1998. Print.
+
+

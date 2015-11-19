@@ -4,7 +4,7 @@
 \alias{create_system}
 \title{Create a system}
 \usage{
-create_system(named)
+create_system(name = "")
 }
 \arguments{
 \item{named}{}

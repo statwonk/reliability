@@ -5,7 +5,7 @@
 #' @return list
 #' @export
 #'
-create_system <- function(name) {
+create_system <- function(name = "") {
   reliability_graph <- list()
 
   attr(reliability_graph, "name") <- name
@@ -27,7 +27,10 @@ node <- function(graph = NULL, name, reliability, n = 1) {
   if(is.null(graph)) graph <- list()
 
   reliability <- 1 - prod(rep(1 - reliability, n))
-  graph[[name]] <- reliability
+  graph <- c(graph, reliability) # http://stackoverflow.com/a/2436960/1408640
+  attr(graph[[length(graph)]], "name") <- name
+  attr(graph[[length(graph)]], "nodes") <- n
+  attr(graph, "class") <- "reliability_graph"
 
   return(graph)
 }

@@ -7,15 +7,19 @@
 #'
 plot.reliability_graph <- function(x) {
 
-  x <- create_system() %>%
-    node('load balancer', 0.9) %>%
-    node('database', 0.9, 2) %>%
-    node('web server', 0.8) %>% plot()
+  #   x <- create_system() %>%
+  #     node('load balancer', 0.9)
 
-  create_graph() %>%
-    add_node_df(create_nodes(format_node_names(x))) %>%
-    add_edge_df(create_edges(from = format_from_nodes(x),
-                             to = format_to_nodes(x))) %>%
+  graph <- create_graph() %>%
+    add_node_df(create_nodes(format_node_names(x)))
+
+  if(length(x) > 1) {
+    graph <- graph %>%
+      add_edge_df(create_edges(from = format_from_nodes(x),
+                               to = format_to_nodes(x)))
+  }
+
+  graph %>%
     render_graph()
 }
 
@@ -25,7 +29,7 @@ plot.reliability_graph <- function(x) {
 #'
 #' @export
 #'
-node_structure <- function(x) sapply(x, FUN = function(x) { 1:attr(x, "nodes") })
+node_structure <- function(x) sapply(x, FUN = function(x) { attr(x, "nodes") })
 
 #' Vectorize edges from nodes
 #'
@@ -34,15 +38,14 @@ node_structure <- function(x) sapply(x, FUN = function(x) { 1:attr(x, "nodes") }
 #' @export
 #'
 format_from_nodes <- function(x) {
-  if(all(unlist(node_structure(x)) == 1)) {
+  if(all(node_structure(x) == 1)) {
     node_names <- sapply(x, function(x) { attr(x, "name") })
     return(node_names[-length(node_names)])
   } else {
-    node_length <- sapply(node_structure(x), FUN = function(x) { max(x) })
     for(i in 1:length(x)) {
       attr(x[[i]], "edges_out_per_node") <- ifelse(
         i == length(x), 0,
-        node_length[[i + 1]])
+        node_structure(x)[[i + 1]])
     }
     return(unlist(
       sapply(1:length(x),
@@ -53,7 +56,7 @@ format_from_nodes <- function(x) {
                  if(attr(x[[i]], "edges_out_per_node") == 0) {
                    NULL
                  } else {
-                   paste(attr(x[[i]], "name"), 1:(attr(x[[i]], "edges_out_per_node")*attr(x[[i]], "nodes")))
+                   sort(rep(paste(attr(x[[i]], "name"), 1:attr(x[[i]], "nodes")), attr(x[[i]], "edges_out_per_node")))
                  }
                }
              }))
@@ -72,11 +75,10 @@ format_to_nodes <- function(x) {
     node_names <- sapply(x, function(x) { attr(x, "name") })
     node_names[-1]
   } else {
-    node_length <- sapply(node_structure(x), FUN = function(x) { max(x) })
     for(i in 1:length(x)) {
       attr(x[[i]], "edges_in_per_node") <- ifelse(
         i == 1, 0,
-        node_length[[i - 1]])
+        node_structure(x)[[i - 1]])
     }
     return(unlist(
       sapply(1:length(x),
@@ -87,7 +89,7 @@ format_to_nodes <- function(x) {
                  if(attr(x[[i]], "nodes") == 1) {
                    rep(attr(x[[i]], "name"), attr(x[[i]], "edges_in_per_node")*attr(x[[i]], "nodes"))
                  } else {
-                   paste(attr(x[[i]], "name"), 1:attr(x[[i]], "nodes"))
+                   rep(paste(attr(x[[i]], "name"), 1:attr(x[[i]], "nodes")), attr(x[[i]], "edges_in_per_node"))
                  }
                }
              }))
@@ -108,6 +110,5 @@ format_node_names <- function(x) {
         attr(x, "name")
       } else {
         paste(attr(x, "name"), 1:attr(x, "nodes"))
-      }})
-  )
+      }}, simplify = FALSE))
 }
